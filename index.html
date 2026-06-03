@@ -1,600 +1,940 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prototype - Grande Stratégie</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #0c1118;
-      --panel: #141b25;
-      --panel-alt: #1c2634;
-      --text: #f4f7fb;
-      --muted: #9fb0c6;
-      --accent: #57c4ff;
-      --accent-2: #f2c14e;
-      --success: #5ad48a;
-      --danger: #f06a6a;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cabinet — Golfe de Sanga</title>
+<style>
+:root{
+--bg:#1a120a;--bg2:#221810;--bg3:#2a1e10;--bg4:#32241a;
+--brd:rgba(180,150,100,.18);--brd2:rgba(180,150,100,.28);
+--tx:rgba(240,228,208,.92);--tx2:rgba(240,228,208,.72);--tx3:rgba(240,228,208,.48);--tx4:rgba(240,228,208,.28);
+--gold:#c8a84b;--gold2:#b8983b;--gold3:#e8c86a;
+--red:#c0392b;--red2:#e05040;--grn:#2e7d4a;--grn2:#3ea05a;
+--blu:#2a5080;--blu2:#4a88c0;--amb:#b07820;
+--war:#7a1818;--war2:#c03030;
+--rev:#3a1a6a;--rev2:#7040b0;
+font-size:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font-family:Georgia,serif;min-height:100vh;overflow:hidden;}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+/* SCREENS */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;}
+.screen.off{display:none!important;}
 
-    body {
-      font-family: "Inter", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+/* TITLE */
+#s-title{background:radial-gradient(ellipse at 50% 60%,#2a1a06 0%,#0e0804 100%);}
+.title-wrap{text-align:center;max-width:520px;}
+.title-sub{font-size:9px;letter-spacing:.25em;color:var(--gold2);text-transform:uppercase;margin-bottom:.6rem;}
+.title-main{font-size:38px;color:var(--gold3);font-weight:300;letter-spacing:.04em;line-height:1.15;margin-bottom:.4rem;}
+.title-tagline{font-size:11px;color:var(--tx3);font-style:italic;margin-bottom:2rem;}
+.title-border{border-top:1px solid var(--brd2);width:200px;margin:0 auto 2rem;}
+.nbtn{background:none;border:1px solid var(--gold2);color:var(--gold);padding:.5rem 1.4rem;font-family:Georgia,serif;font-size:11px;cursor:pointer;letter-spacing:.08em;transition:all .2s;}
+.nbtn:hover{background:rgba(180,150,80,.12);border-color:var(--gold3);}
+.nbtn:disabled{opacity:.35;cursor:default;}
 
-    .app {
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      min-height: 100vh;
-    }
+/* COUNTRY SELECT */
+#s-country{background:var(--bg);}
+.setup-h{font-size:9px;letter-spacing:.2em;color:var(--gold2);text-transform:uppercase;margin-bottom:1.2rem;text-align:center;}
+#cc-grid{display:flex;gap:.8rem;margin-bottom:1.2rem;}
+.cc{background:var(--bg3);border:1px solid var(--brd);padding:.8rem 1rem;cursor:pointer;width:175px;transition:all .2s;}
+.cc:hover{border-color:var(--gold2);}
+.cc.sel{border-color:var(--gold3);background:rgba(180,150,80,.08);}
+.cc-name{font-size:15px;color:var(--gold3);margin-bottom:.15rem;}
+.cc-type{font-size:8.5px;color:var(--tx3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;}
+.cc-desc{font-size:10px;color:var(--tx2);line-height:1.45;margin-bottom:.5rem;}
+.cc-stats{margin-bottom:.4rem;}
+.cc-stat{display:flex;align-items:center;gap:.35rem;margin-bottom:.2rem;font-size:8.5px;color:var(--tx3);}
+.cc-sbar{flex:1;height:3px;background:var(--bg4);}
+.cc-sfill{height:100%;background:var(--gold2);}
+.cc-warn{font-size:8px;color:var(--amb);border-top:1px solid var(--brd);padding-top:.3rem;margin-top:.3rem;}
+.setup-nav{display:flex;gap:.6rem;align-items:center;}
 
-    .topbar {
-      display: grid;
-      grid-template-columns: 1.2fr 1.5fr 1.2fr 1.5fr;
-      gap: 1rem;
-      align-items: center;
-      padding: 1rem 1.5rem;
-      background: #0f151e;
-      border-bottom: 1px solid #1f2a3a;
-    }
+/* IDEOLOGY */
+#s-ideo{background:var(--bg);}
+#ig-grid{display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;justify-content:center;}
+.ic{background:var(--bg3);border:1px solid var(--brd);padding:.7rem .9rem;cursor:pointer;width:155px;transition:all .2s;}
+.ic:hover{border-color:var(--gold2);}
+.ic.sel{border-color:var(--gold3);background:rgba(180,150,80,.07);}
+.ic-name{font-size:13px;margin-bottom:.2rem;}
+.ic-desc{font-size:9px;color:var(--tx2);line-height:1.4;margin-bottom:.3rem;}
+.ic-bonus{font-size:8.5px;color:var(--tx3);}
 
-    .topbar__brand {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
+/* CABINET */
+#s-cabinet{background:var(--bg);flex-direction:row;align-items:flex-start;padding:1rem 1.5rem;gap:1rem;}
+.cab-left{width:280px;flex-shrink:0;}
+.cab-right{flex:1;min-width:0;}
+.llab{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx4);}
+.slot{background:var(--bg3);border:1px solid var(--brd);padding:.5rem .65rem;margin-bottom:.3rem;cursor:pointer;transition:border-color .15s;}
+.slot:hover{border-color:var(--gold2);}
+.slot.active{border-color:var(--gold3);}
+.slot-role{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx4);margin-bottom:.2rem;}
+.slot-empty{font-size:11px;color:var(--tx3);font-style:italic;}
+.slot-tags{display:flex;gap:.25rem;flex-wrap:wrap;margin-top:.25rem;}
+.stag{font-size:7.5px;border:1px solid;padding:1px 5px;border-radius:2px;}
+.stag.loy{color:var(--grn2);border-color:var(--grn);}
+.stag.unc{color:var(--amb);border-color:var(--amb);}
+.stag.hos{color:var(--red2);border-color:var(--red);}
+.pool-h{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--tx4);margin-bottom:.5rem;}
+#cand-pool{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;max-height:480px;overflow-y:auto;}
+.cand{background:var(--bg3);border:1px solid var(--brd);padding:.5rem .6rem;cursor:pointer;transition:all .15s;}
+.cand:hover:not(.nope){border-color:var(--gold2);background:rgba(180,150,80,.06);}
+.cand.nope{opacity:.35;cursor:default;}
+.cand-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.2rem;}
+.cand-name{font-size:11px;color:var(--tx);}
+.cand-ideo{font-size:7.5px;font-style:italic;}
+.cand-desc{font-size:9px;color:var(--tx2);line-height:1.4;margin-bottom:.2rem;}
+.cand-hidden{font-size:8.5px;color:var(--amb);font-style:italic;margin-bottom:.2rem;}
+.ldots{display:flex;gap:2px;align-items:center;}
+.ld{width:10px;height:3px;background:var(--bg4);border-radius:1px;}
+.ld.on{background:var(--gold2);}
+.cab-nav{display:flex;gap:.6rem;margin-top:.8rem;align-items:center;}
 
-    .logo {
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
+/* GAME SCREEN */
+#s-game{flex-direction:row;align-items:stretch;padding:0;background:var(--bg);overflow:hidden;}
+.game-left{width:220px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--brd);display:flex;flex-direction:column;overflow:hidden;}
+.game-center{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;}
+.game-right{width:200px;flex-shrink:0;background:var(--bg2);border-left:1px solid var(--brd);overflow-y:auto;}
 
-    .turn {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:.3rem .7rem;background:var(--bg3);border-bottom:1px solid var(--brd);min-height:26px;flex-shrink:0;}
+.tb-l{font-size:10px;font-style:italic;color:var(--gold3);}
+.tb-c{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);}
+.tb-r{font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--tx2);}
+.ideo-ind{font-size:7.5px;background:rgba(180,150,80,.12);border:1px solid var(--brd);padding:1px 6px;color:var(--gold2);}
 
-    .topbar__resources,
-    .topbar__status {
-      display: flex;
-      gap: 1rem;
-    }
+/* LEFT PANEL TABS */
+.ltabs{display:flex;border-bottom:1px solid var(--brd);flex-shrink:0;}
+.ltab{flex:1;text-align:center;font-size:7.5px;padding:.3rem .1rem;color:var(--tx4);cursor:pointer;letter-spacing:.06em;transition:all .15s;}
+.ltab:hover,.ltab.on{color:var(--gold2);}
+.ltab.on{border-bottom:1px solid var(--gold2);}
+.tab-pane{display:none;flex:1;overflow-y:auto;padding:.45rem .5rem;}
+.tab-pane.on{display:block;}
 
-    .resource,
-    .status {
-      background: var(--panel);
-      padding: 0.6rem 0.8rem;
-      border-radius: 0.6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      min-width: 96px;
-    }
+/* STATS */
+.stat-row{display:flex;align-items:center;gap:.35rem;margin-bottom:.35rem;}
+.stat-lbl{font-size:8px;color:var(--tx3);width:50px;flex-shrink:0;}
+.stat-bar{flex:1;height:4px;background:var(--bg4);}
+.stat-fill{height:100%;background:var(--gold2);transition:width .3s;}
+.sv{font-size:9px;font-family:'Share Tech Mono',monospace;width:22px;text-align:right;}
+.sv.d{color:var(--red2);}
+.sv.w{color:var(--amb);}
 
-    .resource .label,
-    .status .label {
-      color: var(--muted);
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+/* ECO PANEL */
+.eco-section{margin-bottom:.5rem;}
+.eco-sh{font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx4);margin-bottom:.25rem;border-bottom:1px solid var(--brd);padding-bottom:.15rem;}
+.eco-line{display:flex;justify-content:space-between;align-items:center;margin-bottom:.15rem;}
+.eco-label{font-size:8.5px;color:var(--tx2);}
+.eco-val{font-size:9px;font-family:'Share Tech Mono',monospace;}
+.eco-val.pos{color:var(--grn2);}
+.eco-val.neg{color:var(--red2);}
+.eco-val.neu{color:var(--amb);}
+.eco-total{border-top:1px solid var(--brd);padding-top:.2rem;margin-top:.2rem;display:flex;justify-content:space-between;}
 
-    .resource .value,
-    .status .value {
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
+/* MIL PANEL */
+.mil-row{display:flex;justify-content:space-between;margin-bottom:.2rem;}
+.mil-label{font-size:8.5px;color:var(--tx2);}
+.mil-val{font-size:9px;font-family:'Share Tech Mono',monospace;color:var(--tx);}
+.mil-val.crit{color:var(--red2);}
+.mil-val.warn{color:var(--amb);}
+.mil-section{margin-bottom:.5rem;}
+.mil-sh{font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx4);margin-bottom:.2rem;}
 
-    .topbar__alerts {
-      display: flex;
-      gap: 0.6rem;
-      justify-content: flex-end;
-    }
+/* WAR PANEL in narrative */
+#war-panel{display:none;background:rgba(122,24,24,.13);border:1px solid rgba(192,48,48,.3);border-radius:2px;padding:.5rem .65rem;margin:.4rem 0;}
+#war-panel.active{display:block;}
+.war-panel-title{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--war2);margin-bottom:.35rem;}
+.war-power-bars{display:grid;grid-template-columns:1fr 1fr;gap:.35rem;margin-bottom:.35rem;}
+.war-power-col h5{font-size:8px;color:var(--tx3);margin-bottom:.2rem;}
+.war-bar{height:4px;background:var(--bg4);margin:.15rem 0;}
+.war-bar-fill{height:100%;}
+.war-bar-fill.att{background:var(--gold2);}
+.war-bar-fill.def{background:var(--blu2);}
+.war-num{font-size:9px;font-family:'Share Tech Mono',monospace;color:var(--tx2);}
+.war-cas{font-size:8px;color:var(--tx3);border-top:1px solid var(--brd);padding-top:.25rem;margin-top:.25rem;}
 
-    .alert {
-      background: #1b2533;
-      border: 1px solid #243246;
-      border-radius: 999px;
-      color: var(--text);
-      padding: 0.35rem 0.8rem;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
+/* REVOLT PANEL */
+#rev-panel{display:none;background:rgba(58,26,106,.13);border:1px solid rgba(112,64,176,.3);border-radius:2px;padding:.5rem .65rem;margin:.4rem 0;}
+#rev-panel.active{display:block;}
+.rev-panel-title{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--rev2);margin-bottom:.3rem;}
+.rev-zones{font-size:8.5px;color:var(--tx2);}
 
-    .alert:nth-child(1) {
-      border-color: var(--success);
-      color: var(--success);
-    }
+/* FAC PANEL */
+.fr{margin-bottom:.4rem;}
+.fh{display:flex;justify-content:space-between;align-items:center;margin-bottom:.1rem;}
+.fn{font-size:8.5px;color:var(--tx2);}
+.fv{font-size:9px;font-family:'Share Tech Mono',monospace;}
+.fbar{height:3px;background:var(--bg4);}
+.ftrend.up{color:var(--grn2);font-size:7.5px;margin-left:2px;}
+.ftrend.dn{color:var(--red2);font-size:7.5px;margin-left:2px;}
+.ff0{height:100%;background:#c04848;}
+.ff1{height:100%;background:#c09030;}
+.ff2{height:100%;background:#3080b0;}
+.ff3{height:100%;background:#408040;}
+.ff4{height:100%;background:#8040a0;}
 
-    .alert:nth-child(2) {
-      border-color: var(--accent-2);
-      color: var(--accent-2);
-    }
+/* CAB MINI */
+.advc{display:flex;gap:.35rem;align-items:center;padding:.25rem .3rem;margin-bottom:.2rem;border-radius:2px;}
+.advc.active{background:rgba(180,150,80,.08);border-left:2px solid var(--gold2);}
+.advi{font-size:16px;}
+.advn{font-size:9px;color:var(--tx);}
+.advr{font-size:7.5px;color:var(--tx4);text-transform:uppercase;letter-spacing:.08em;}
+.advl{font-size:7.5px;}
 
-    .alert:nth-child(3) {
-      border-color: var(--danger);
-      color: var(--danger);
-    }
+/* PROJ MINI */
+.proj-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:.2rem;}
+.proj-name{font-size:8.5px;color:var(--tx2);}
+.proj-status.active{font-size:7.5px;color:var(--amb);}
+.proj-status.built{font-size:7.5px;color:var(--grn2);}
 
-    .content {
-      display: grid;
-      grid-template-columns: 2.3fr 1fr;
-      gap: 1.5rem;
-      padding: 1.5rem;
-    }
+/* CENTER - MAP */
+#mapzone{flex-shrink:0;position:relative;overflow:hidden;background:#1a2a3a;border-bottom:1px solid var(--brd);}
+#mapsvg{width:100%;display:block;}
 
-    .map {
-      background: var(--panel);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    }
+/* Map layers */
+.reg{fill:rgba(60,80,50,.6);stroke:rgba(180,150,100,.25);stroke-width:.5;cursor:pointer;transition:fill .25s;}
+.reg:hover{fill:rgba(180,150,100,.2);}
+.reg[data-country="tiroy"]{fill:rgba(80,110,70,.65);}
+.reg[data-country="mando"]{fill:rgba(100,80,50,.65);}
+.reg[data-country="belo"]{fill:rgba(70,90,110,.65);}
+.reg-korda{fill:rgba(50,50,60,.55);}
+.reg-lassane{fill:rgba(90,80,50,.5);}
+.reg-ouenza{fill:rgba(55,65,55,.5);}
+.reg-nwari{fill:rgba(40,60,80,.7);}
+.water{fill:#1e3a52;stroke:none;}
+.water-deep{fill:#162a3a;}
+.coast{fill:none;stroke:rgba(80,140,180,.4);stroke-width:.4;}
 
-    .map__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-    }
+.hl-tiroy,.hl-mando,.hl-belo{fill:rgba(0,0,0,0);transition:fill .5s;}
 
-    .map__header h1 {
-      font-size: 1.3rem;
-    }
+/* Layer mode overrides */
+#mapsvg.layer-eco .reg{opacity:.8;}
+#mapsvg.layer-eco .reg[data-eco="high"]{fill:rgba(80,160,80,.5);}
+#mapsvg.layer-eco .reg[data-eco="low"]{fill:rgba(160,80,30,.4);}
+#mapsvg.layer-mil .reg[data-mil="fort"]{fill:rgba(160,40,40,.45);}
+#mapsvg.layer-mil .reg[data-mil="medium"]{fill:rgba(160,120,40,.3);}
+#mapsvg.layer-pop .reg[data-pop="high"]{fill:rgba(80,80,180,.4);}
 
-    .map__actions {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
+/* Tension lines */
+.tension-line{fill:none;stroke:rgba(180,60,60,.0);stroke-width:1;stroke-dasharray:3,2;transition:stroke-opacity .5s;}
+.tension-line.active{stroke:rgba(180,60,60,.6);}
+.war-zone{fill:rgba(180,40,40,.0);stroke:none;transition:all .4s;}
+.war-zone.active{fill:rgba(180,40,40,.18);stroke:rgba(220,60,60,.4);stroke-width:.8;}
+.rev-zone{fill:rgba(100,40,160,.0);transition:all .4s;}
+.rev-zone.active{fill:rgba(100,40,160,.2);}
 
-    .map__actions button {
-      background: var(--panel-alt);
-      color: var(--text);
-      border: 1px solid #233044;
-      padding: 0.4rem 0.9rem;
-      border-radius: 0.6rem;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
+/* City dots */
+.city-dot{cursor:pointer;}
+.city-dot circle{transition:r .2s;}
+.city-dot:hover circle{r:4;}
+.city-cap{fill:var(--gold2);}
+.city-sec{fill:rgba(180,150,100,.6);}
 
-    .map__grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1rem;
-    }
+/* Map toolbar */
+.map-tb{display:flex;gap:.2rem;padding:.2rem .4rem;background:var(--bg2);border-bottom:1px solid var(--brd);flex-shrink:0;align-items:center;}
+.maptb{font-size:7.5px;padding:.15rem .5rem;background:none;border:1px solid var(--brd);color:var(--tx4);cursor:pointer;font-family:Georgia,serif;letter-spacing:.06em;transition:all .15s;}
+.maptb.on,.maptb:hover{border-color:var(--gold2);color:var(--gold2);}
+.map-label{font-size:7.5px;color:var(--tx4);margin-right:.3rem;}
 
-    .tile {
-      padding: 1rem;
-      border-radius: 0.9rem;
-      background: #1a2230;
-      border: 1px solid #243246;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      min-height: 110px;
-    }
+/* Tooltips */
+#reg-tooltip,#city-tooltip{display:none;position:absolute;background:rgba(26,18,8,.96);border:1px solid var(--brd2);padding:.35rem .5rem;font-size:8.5px;line-height:1.5;z-index:50;max-width:170px;pointer-events:none;}
 
-    .tile span {
-      font-weight: 600;
-    }
+/* NARRATIVE */
+.narr-zone{flex:1;overflow-y:auto;padding:.6rem .8rem;display:flex;flex-direction:column;gap:.4rem;}
+.sit-tag-row{display:flex;align-items:center;gap:.5rem;}
+.sit-tag{font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);background:rgba(180,150,80,.1);border:1px solid rgba(180,150,80,.2);padding:1px 7px;}
+.sit-year{font-size:8.5px;font-family:'Share Tech Mono',monospace;color:var(--tx3);}
+.sit-title{font-size:16px;color:var(--gold3);font-weight:300;line-height:1.3;}
+.sit-title.war-title{color:var(--war2);}
+.sit-title.rev-title{color:var(--rev2);}
+.sit-text{font-size:10.5px;color:var(--tx2);line-height:1.65;}
+.info-box{background:var(--bg3);border-left:2px solid var(--gold2);padding:.3rem .5rem;font-size:9px;color:var(--tx2);line-height:1.45;}
+.info-box.war{border-color:var(--war2);}
+.info-box.rev{border-color:var(--rev2);}
+.loy-alert{display:none;font-size:8.5px;color:var(--amb);background:rgba(176,120,32,.1);border:1px solid rgba(176,120,32,.25);padding:.25rem .5rem;}
+#advbox{display:none;background:rgba(180,150,80,.06);border:1px solid var(--brd);padding:.4rem .6rem;}
+.adv-who{font-size:8px;color:var(--gold2);margin-bottom:.2rem;}
+.adv-q{font-size:9.5px;color:var(--tx);font-style:italic;line-height:1.5;}
+.adv-warn{display:none;font-size:8px;color:var(--red2);margin-top:.25rem;}
 
-    .tile small {
-      color: var(--muted);
-    }
+/* CHOICES */
+#clist{display:flex;flex-direction:column;gap:.3rem;padding:.4rem .8rem .8rem;}
+.cbtn{display:flex;align-items:flex-start;gap:.5rem;background:var(--bg3);border:1px solid var(--brd);padding:.5rem .65rem;cursor:pointer;font-family:Georgia,serif;text-align:left;transition:all .18s;width:100%;}
+.cbtn:hover:not([disabled]){border-color:var(--gold2);background:rgba(180,150,80,.07);}
+.cbtn:disabled{opacity:.35;}
+.cbtn.war-btn{border-color:rgba(192,48,48,.35);}
+.cbtn.war-btn:hover:not([disabled]){border-color:var(--war2);background:rgba(122,24,24,.1);}
+.cbtn.rev-btn{border-color:rgba(112,64,176,.3);}
+.cbtn.rev-btn:hover:not([disabled]){border-color:var(--rev2);background:rgba(58,26,106,.1);}
+.ckey{font-size:9px;font-family:'Share Tech Mono',monospace;color:var(--tx4);width:14px;flex-shrink:0;padding-top:2px;}
+.ctxt{font-size:10.5px;color:var(--tx);margin-bottom:.2rem;line-height:1.4;}
+.cideotag{font-size:7.5px;border:1px solid;padding:1px 5px;display:inline-block;margin-bottom:.2rem;}
+.cprev{font-size:9px;color:var(--tx3);line-height:1.45;font-style:italic;}
+.cecon{font-size:8px;color:var(--grn2);margin-top:.2rem;}
 
-    .tile.capital {
-      border-color: var(--accent);
-      box-shadow: inset 0 0 0 1px rgba(87, 196, 255, 0.3);
-    }
+/* RIGHT PANEL */
+.rp-section{padding:.45rem .55rem;border-bottom:1px solid var(--brd);}
+.rp-h{font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tx4);margin-bottom:.35rem;}
+.he{margin-bottom:.4rem;padding-bottom:.4rem;border-bottom:1px solid var(--brd);}
+.ht{font-size:8px;font-family:'Share Tech Mono',monospace;color:var(--tx4);}
+.hx{font-size:9px;color:var(--tx2);line-height:1.4;}
+.hd{display:flex;gap:.25rem;flex-wrap:wrap;margin-top:.2rem;}
+.dp{font-size:8px;color:var(--grn2);}
+.dn{font-size:8px;color:var(--red2);}
 
-    .tile.port {
-      background: linear-gradient(135deg, #1b2a3b, #19202d);
-    }
+/* MODALS */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:100;}
+.modal.off{display:none;}
+.modal-box{background:var(--bg2);border:1px solid var(--brd2);width:min(700px,96vw);max-height:90vh;display:flex;flex-direction:column;}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;border-bottom:1px solid var(--brd);}
+.modal-title{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold2);}
+.modal-close{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:14px;padding:.2rem .4rem;}
+.modal-close:hover{color:var(--tx);}
+.modal-body{padding:.7rem .9rem;overflow-y:auto;flex:1;}
 
-    .tile.desert {
-      background: linear-gradient(135deg, #2b2720, #1a1f29);
-    }
+/* PROJECT MODAL */
+#proj-list{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.proj-card{background:var(--bg3);border:1px solid var(--brd);padding:.5rem .65rem;display:flex;gap:.5rem;}
+.proj-emoji{font-size:22px;flex-shrink:0;padding-top:.1rem;}
+.proj-info{flex:1;min-width:0;}
+.proj-card-name{font-size:11px;color:var(--tx);margin-bottom:.15rem;}
+.proj-card-desc{font-size:8.5px;color:var(--tx2);line-height:1.4;margin-bottom:.25rem;}
+.proj-card-dilemma{font-size:8px;color:var(--amb);font-style:italic;margin-bottom:.2rem;border-left:2px solid var(--amb);padding-left:.3rem;}
+.proj-card-fx{font-size:8px;color:var(--gold2);margin-bottom:.2rem;}
+.proj-card-eco{font-size:8px;color:var(--grn2);margin-bottom:.3rem;}
+.proj-cost{font-size:9px;font-family:'Share Tech Mono',monospace;color:var(--tx3);text-align:right;flex-shrink:0;min-width:40px;}
+.proj-btn{display:block;width:100%;font-size:8.5px;padding:.25rem .4rem;border:1px solid var(--brd2);background:none;color:var(--tx2);cursor:pointer;font-family:Georgia,serif;margin-top:.25rem;transition:all .15s;}
+.proj-btn:hover:not([disabled]):not(.built):not(.funded){border-color:var(--gold2);color:var(--gold2);}
+.proj-btn:disabled{opacity:.4;cursor:default;}
+.proj-btn.built{color:var(--grn2);border-color:var(--grn);}
+.proj-btn.funded{color:var(--amb);border-color:var(--amb);}
 
-    .tile.jungle {
-      background: linear-gradient(135deg, #1c2b25, #192230);
-    }
+/* BUDGET MODAL */
+.bud-section{margin-bottom:.7rem;}
+.bud-section-title{font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--tx4);margin-bottom:.3rem;border-bottom:1px solid var(--brd);padding-bottom:.15rem;}
+.bud-line{display:flex;justify-content:space-between;align-items:center;margin-bottom:.2rem;}
+.bud-name{font-size:9px;color:var(--tx2);}
+.bud-amt{font-size:9px;font-family:'Share Tech Mono',monospace;}
+.bud-total{font-size:10px;}
 
-    .tile.mountain {
-      background: linear-gradient(135deg, #202634, #192230);
-    }
+/* YEAR TRANSITION */
+#ytrans{position:fixed;inset:0;background:rgba(10,6,2,.96);display:flex;align-items:center;justify-content:center;z-index:200;transform:translateY(100%);transition:transform .4s;}
+#ytrans.show{transform:translateY(0);}
+.yt-inner{max-width:480px;width:100%;padding:2rem;}
+.yt-yr-row{display:flex;align-items:baseline;gap:.5rem;margin-bottom:.5rem;}
+.yt-prev{font-size:14px;color:var(--tx4);}
+.yt-yr-num{font-size:32px;color:var(--gold3);}
+.yt-sub-txt{font-size:8.5px;color:var(--tx3);letter-spacing:.1em;margin-bottom:1.2rem;}
+.yt-sec-h{font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--tx4);margin:.6rem 0 .3rem;}
+.yt-ev{padding:.3rem .5rem;border-left:2px solid var(--brd);margin-bottom:.3rem;}
+.yt-ev.pos{border-color:var(--grn);}
+.yt-ev.neg{border-color:var(--red);}
+.yt-ev-txt{font-size:9.5px;color:var(--tx2);}
+.yt-ev-dl{font-size:8px;color:var(--tx4);}
+.yt-eco-item{font-size:9px;display:inline-block;margin-right:.5rem;margin-bottom:.15rem;}
+.yt-eco-item.pos{color:var(--grn2);}
+.yt-eco-item.neg{color:var(--red2);}
+.yt-proj-item{font-size:8.5px;color:var(--amb);display:inline-block;margin-right:.4rem;}
 
-    .tile.frontier {
-      border-color: var(--danger);
-    }
+/* GAME OVER */
+#s-gameover{background:radial-gradient(ellipse at 50% 40%,#1a0e06,#06040200);}
+.go-inner{max-width:540px;text-align:center;}
+.go-sub{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--tx4);margin-bottom:.5rem;}
+.go-h2{font-size:28px;color:var(--gold3);font-weight:300;margin-bottom:.8rem;line-height:1.3;}
+.go-text{font-size:11px;color:var(--tx2);line-height:1.7;margin-bottom:1.2rem;max-width:440px;margin-left:auto;margin-right:auto;}
+.go-stats{display:flex;gap:.8rem;justify-content:center;margin-bottom:1.2rem;font-size:9px;color:var(--tx3);}
+.go-projs{font-size:8.5px;color:var(--amb);margin-bottom:1.2rem;}
 
-    .context {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: 2fr 1fr;
-      background: var(--panel-alt);
-      padding: 1rem 1.2rem;
-      border-radius: 0.8rem;
-      border: 1px solid #233044;
-    }
+/* ── DICE OVERLAY ─────────────────────── */
+#dice-overlay{position:fixed;inset:0;background:rgba(0,0,0,.84);display:flex;align-items:center;justify-content:center;z-index:300;}
+#dice-overlay.off{display:none!important;}
+.dice-box{background:var(--bg3);border:1px solid var(--brd2);padding:1.6rem 2rem;text-align:center;max-width:400px;width:calc(100% - 2rem);}
+.dice-ctx{font-size:7.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--war2);margin-bottom:.8rem;}
+.dice-wrap{display:flex;gap:1.4rem;justify-content:center;margin:.8rem 0;}
+.die{font-size:58px;line-height:1;display:inline-block;}
+.die.rolling{animation:dr .09s infinite;}
+@keyframes dr{0%{opacity:.4;transform:rotate(-8deg);}50%{opacity:1;transform:rotate(4deg);}100%{opacity:.4;transform:rotate(-8deg);}}
+.dice-num{font-size:32px;font-family:Georgia,serif;color:var(--gold3);margin:.4rem 0;font-weight:300;}
+.dice-tier{font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:.2rem .9rem;display:inline-block;margin-bottom:.5rem;}
+.dice-tier.bad{color:var(--red2);border:1px solid var(--red);}
+.dice-tier.neu{color:var(--tx2);border:1px solid var(--brd2);}
+.dice-tier.good{color:var(--grn2);border:1px solid var(--grn);}
+.dice-tier.crit{color:var(--gold3);border:1px solid var(--gold2);}
+.dice-flav{font-size:10px;color:var(--tx2);font-style:italic;margin:.4rem 0 .8rem;max-width:320px;margin-left:auto;margin-right:auto;}
 
-    .context p {
-      color: var(--muted);
-      margin-top: 0.4rem;
-      line-height: 1.5;
-    }
+/* ── CONTRACTOR MODAL ─────────────────── */
+.contr-card{background:var(--bg3);border:1px solid var(--brd);padding:.6rem .8rem;margin-bottom:.4rem;cursor:pointer;transition:all .18s;display:flex;gap:.6rem;align-items:flex-start;}
+.contr-card:hover{border-color:var(--gold2);}
+.contr-card.sel{border-color:var(--gold3);background:rgba(180,150,80,.09);}
+.contr-key{font-size:11px;font-weight:700;color:var(--gold2);min-width:16px;}
+.contr-body{flex:1;}
+.contr-name{font-size:10.5px;color:var(--tx);margin-bottom:.1rem;}
+.contr-desc{font-size:9px;color:var(--tx3);line-height:1.45;margin-bottom:.25rem;}
+.contr-fx{font-size:8.5px;color:var(--gold2);}
+.contr-narr{font-size:9.5px;color:var(--tx2);font-style:italic;padding:.5rem .6rem;border-left:2px solid var(--brd2);margin-top:.5rem;min-height:2rem;}
 
-    .context__buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .context__buttons button {
-      background: var(--accent);
-      color: #04111a;
-      border: none;
-      padding: 0.5rem 0.7rem;
-      border-radius: 0.6rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .context__buttons button:nth-child(2) {
-      background: var(--accent-2);
-    }
-
-    .context__buttons button:nth-child(3) {
-      background: #1b2533;
-      color: var(--text);
-      border: 1px solid #2a3a52;
-    }
-
-    .sidebar {
-      background: var(--panel);
-      border-radius: 1rem;
-      padding: 1.2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      transition: width 0.3s ease, opacity 0.3s ease;
-    }
-
-    .sidebar.collapsed {
-      width: 60px;
-      overflow: hidden;
-    }
-
-    .sidebar__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .collapse {
-      background: none;
-      border: 1px solid #2b394e;
-      color: var(--muted);
-      padding: 0.25rem 0.6rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-    }
-
-    .tabs {
-      display: grid;
-      gap: 0.4rem;
-    }
-
-    .tab {
-      background: #1a2230;
-      border: 1px solid #243246;
-      color: var(--muted);
-      padding: 0.5rem 0.7rem;
-      border-radius: 0.6rem;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .tab.active {
-      color: var(--text);
-      border-color: var(--accent);
-      box-shadow: inset 0 0 0 1px rgba(87, 196, 255, 0.35);
-    }
-
-    .panel {
-      background: #121924;
-      border-radius: 0.8rem;
-      padding: 1rem;
-      border: 1px solid #202b3d;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      min-height: 300px;
-    }
-
-    .panel__card {
-      background: #1a2230;
-      border-radius: 0.8rem;
-      padding: 0.9rem;
-      border: 1px solid #243246;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .panel__card p {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    .panel__actions {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    .panel__actions button {
-      background: #222c3c;
-      color: var(--text);
-      border: 1px solid #2e3d52;
-      padding: 0.35rem 0.6rem;
-      border-radius: 0.5rem;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-
-    .panel ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    .notifications {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-      padding: 1rem 1.5rem 1.8rem;
-    }
-
-    .notification {
-      background: #111822;
-      border-radius: 0.8rem;
-      padding: 0.8rem 1rem;
-      border: 1px solid #1f2a3a;
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-
-    .notification strong {
-      color: var(--accent);
-      font-size: 0.9rem;
-    }
-
-    .notification span {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    @media (max-width: 1200px) {
-      .topbar {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar__resources,
-      .topbar__status,
-      .topbar__alerts {
-        flex-wrap: wrap;
-        justify-content: flex-start;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .content {
-        grid-template-columns: 1fr;
-      }
-
-      .context {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+/* ── MAP VISUAL STATES ─────────────────── */
+.reg.contested{fill:rgba(180,55,30,.42)!important;stroke:rgba(220,75,40,.75)!important;stroke-width:1.5!important;}
+.reg.rebel{fill:rgba(90,35,150,.36)!important;stroke:rgba(140,65,210,.65)!important;stroke-width:1.3!important;}
+.reg.captured{fill:rgba(200,168,75,.3)!important;stroke:rgba(200,168,75,.65)!important;stroke-width:1.3!important;}
+.proj-marker{fill:var(--gold2);opacity:.8;}
+.proj-marker.built{fill:var(--grn2);opacity:.9;}
+</style>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
-      <div class="topbar__brand">
-        <span class="logo">Atlas Prime</span>
-        <span class="turn">Tour 128 · T4 2215</span>
-      </div>
-      <div class="topbar__resources">
-        <div class="resource">
-          <span class="label">Nourriture</span>
-          <span class="value">+320</span>
-        </div>
-        <div class="resource">
-          <span class="label">Énergie</span>
-          <span class="value">+145</span>
-        </div>
-        <div class="resource">
-          <span class="label">Métaux</span>
-          <span class="value">+86</span>
-        </div>
-        <div class="resource">
-          <span class="label">Finances</span>
-          <span class="value">2.4B</span>
-        </div>
-      </div>
-      <div class="topbar__status">
-        <div class="status">
-          <span class="label">Stabilité</span>
-          <span class="value">71%</span>
-        </div>
-        <div class="status">
-          <span class="label">Science</span>
-          <span class="value">Tier IV</span>
-        </div>
-        <div class="status">
-          <span class="label">Population</span>
-          <span class="value">248 M</span>
-        </div>
-      </div>
-      <div class="topbar__alerts">
-        <button class="alert" type="button">Projet terminé</button>
-        <button class="alert" type="button">Crise frontalière</button>
-        <button class="alert" type="button">Guerre froide</button>
-      </div>
-    </header>
 
-    <main class="content">
-      <section class="map">
-        <div class="map__header">
-          <h1>Carte du monde</h1>
-          <div class="map__actions">
-            <button type="button">Construction</button>
-            <button type="button">Déplacement</button>
-            <button type="button">Exploration</button>
-            <button type="button">Recrutement</button>
-          </div>
-        </div>
+<!-- TITLE -->
+<div id="s-title" class="screen">
+  <div class="title-wrap">
+    <div class="title-sub">Anthropic Games · 1971</div>
+    <div class="title-main">Cabinet</div>
+    <div class="title-tagline">Gouverner le Golfe de Sanga</div>
+    <div class="title-border"></div>
+    <button class="nbtn" onclick="show('s-country')">COMMENCER &rarr;</button>
+  </div>
+</div>
 
-        <div class="map__grid">
-          <div class="tile capital">
-            <span>Capitale</span>
-            <small>Industrie 72 · Défense 64</small>
-          </div>
-          <div class="tile port">
-            <span>Port Delta</span>
-            <small>Commerce 58 · Flotte 22</small>
-          </div>
-          <div class="tile desert">
-            <span>Désert Arid</span>
-            <small>Pétrole · Uranium</small>
-          </div>
-          <div class="tile jungle">
-            <span>Forêt Boréale</span>
-            <small>Bois · Biodiversité</small>
-          </div>
-          <div class="tile mountain">
-            <span>Monts Orphelins</span>
-            <small>Minerai · Radar</small>
-          </div>
-          <div class="tile frontier">
-            <span>Frontière Nord</span>
-            <small>Armée 2e Corps</small>
-          </div>
-        </div>
+<!-- COUNTRY SELECT -->
+<div id="s-country" class="screen off">
+  <div class="setup-h">Choisissez votre pays</div>
+  <div id="cc-grid"></div>
+  <div class="setup-nav">
+    <button class="nbtn" onclick="show('s-title')">&larr; RETOUR</button>
+    <button class="nbtn" id="btn-cc" disabled onclick="goIdeo()">CHOISIR &rarr;</button>
+  </div>
+</div>
 
-        <div class="context">
-          <div>
-            <h2>Tuile sélectionnée · Capitale</h2>
-            <p>
-              Croissance démographique stable. Capacité d’infrastructure élevée. Options
-              disponibles : agrandir le centre de recherche, lancer un projet énergétique,
-              mobiliser une brigade.
-            </p>
-          </div>
-          <div class="context__buttons">
-            <button type="button">Planifier un projet</button>
-            <button type="button">Assigner un gouverneur</button>
-            <button type="button">Détails de la ville</button>
-          </div>
-        </div>
-      </section>
+<!-- IDEOLOGY -->
+<div id="s-ideo" class="screen off">
+  <div id="ideo-title" class="setup-h" style="font-size:11px;letter-spacing:0;text-transform:none;color:var(--gold3);margin-bottom:.3rem;"></div>
+  <div id="ideo-sub" class="setup-h" style="margin-bottom:1rem;"></div>
+  <div id="ig-grid"></div>
+  <div class="setup-nav">
+    <button class="nbtn" onclick="show('s-country')">&larr; RETOUR</button>
+    <button class="nbtn" id="btn-ideo" disabled onclick="goCabinet()">COMPOSER LE CABINET &rarr;</button>
+  </div>
+</div>
 
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar__header">
-          <h2>Modules stratégiques</h2>
-          <button class="collapse" type="button" id="toggleSidebar">Replier</button>
-        </div>
-        <div class="tabs">
-          <button class="tab active" type="button">Diplomatie</button>
-          <button class="tab" type="button">Économie</button>
-          <button class="tab" type="button">Politique</button>
-          <button class="tab" type="button">Infrastructures</button>
-          <button class="tab" type="button">Conseil d’État</button>
-          <button class="tab" type="button">Armées</button>
-          <button class="tab" type="button">Technologies</button>
-        </div>
+<!-- CABINET -->
+<div id="s-cabinet" class="screen off">
+  <div class="cab-left">
+    <div id="cab-slots"></div>
+    <div class="cab-nav">
+      <button class="nbtn" onclick="show('s-ideo')">&larr; RETOUR</button>
+      <button class="nbtn" onclick="startGame()">PRENDRE LE POUVOIR &rarr;</button>
+    </div>
+  </div>
+  <div class="cab-right">
+    <div class="pool-h">Candidats disponibles</div>
+    <div id="cand-pool"></div>
+  </div>
+</div>
 
-        <div class="panel">
-          <h3>Diplomatie active</h3>
-          <div class="panel__card">
-            <strong>Alliance de Solarys</strong>
-            <p>Confiance 62 · Peur 18 · Intérêt 74 · Grief 12</p>
-            <div class="panel__actions">
-              <button type="button">Négocier</button>
-              <button type="button">Traité</button>
-              <button type="button">Embargo</button>
-            </div>
-          </div>
-          <div class="panel__card">
-            <strong>Coalition Arctique</strong>
-            <p>Confiance 41 · Peur 55 · Intérêt 33 · Grief 48</p>
-            <div class="panel__actions">
-              <button type="button">Apaiser</button>
-              <button type="button">Médiation</button>
-              <button type="button">Renseignement</button>
-            </div>
-          </div>
+<!-- GAME -->
+<div id="s-game" class="screen off">
 
-          <h4>Négociations en cours</h4>
-          <ul>
-            <li>Corridor énergétique Transauria · 2 tours</li>
-            <li>Accord de recherche quantique · 4 tours</li>
-            <li>Renouvellement pacte de défense · 1 tour</li>
-          </ul>
-        </div>
-      </aside>
-    </main>
-
-    <section class="notifications">
-      <div class="notification">
-        <strong>Événement</strong>
-        <span>Révolte locale contenue grâce aux forces de sécurité.</span>
+  <!-- LEFT PANEL -->
+  <div class="game-left">
+    <div class="topbar" style="border-bottom:1px solid var(--brd);">
+      <span class="tb-l" id="tb-l"></span>
+      <span class="ideo-ind" id="ideo-ind"></span>
+    </div>
+    <div class="ltabs">
+      <span class="ltab on" onclick="switchTab('stats')">STATS</span>
+      <span class="ltab" onclick="switchTab('eco')">ÉCO</span>
+      <span class="ltab" onclick="switchTab('mil')">MIL</span>
+      <span class="ltab" onclick="switchTab('cab')">CAB</span>
+      <span class="ltab" onclick="switchTab('fac')">FAC</span>
+    </div>
+    <!-- STATS -->
+    <div class="tab-pane on" id="tp-stats">
+      <div style="margin-bottom:.5rem;">
+        <div class="stat-row"><span class="stat-lbl">Peuple</span><div class="stat-bar"><div class="stat-fill" id="sb0"></div></div><span class="sv" id="sv0">50</span></div>
+        <div class="stat-row"><span class="stat-lbl">Armée</span><div class="stat-bar"><div class="stat-fill" id="sb1"></div></div><span class="sv" id="sv1">50</span></div>
+        <div class="stat-row"><span class="stat-lbl">Finances</span><div class="stat-bar"><div class="stat-fill" id="sb2"></div></div><span class="sv" id="sv2">50</span></div>
+        <div class="stat-row"><span class="stat-lbl">Légitimité</span><div class="stat-bar"><div class="stat-fill" id="sb3"></div></div><span class="sv" id="sv3">50</span></div>
+        <div class="stat-row"><span class="stat-lbl">Stabilité</span><div class="stat-bar"><div class="stat-fill" id="sb4"></div></div><span class="sv" id="sv4">50</span></div>
       </div>
-      <div class="notification">
-        <strong>Économie</strong>
-        <span>Le prix du pétrole augmente de 8% sur le marché mondial.</span>
+      <div style="margin-top:.5rem;padding-top:.4rem;border-top:1px solid var(--brd);">
+        <div class="rp-h" style="margin-bottom:.3rem;">Relations extérieures</div>
+        <div id="nb-korda" style="font-size:8.5px;color:var(--tx2);margin-bottom:.15rem;"></div>
+        <div id="nb-lassane" style="font-size:8.5px;color:var(--tx2);margin-bottom:.15rem;"></div>
+        <div id="nb-ouenza" style="font-size:8.5px;color:var(--tx2);margin-bottom:.15rem;"></div>
+        <div id="nb-nwari" style="font-size:8.5px;color:var(--tx2);margin-bottom:.15rem;"></div>
       </div>
-      <div class="notification">
-        <strong>Science</strong>
-        <span>Projet « Fission compacte » terminé.</span>
+    </div>
+    <!-- ECO -->
+    <div class="tab-pane" id="tp-eco">
+      <div class="eco-section">
+        <div class="eco-sh">Revenus annuels</div>
+        <div id="eco-income-lines"></div>
+        <div class="eco-total"><span style="font-size:8px;color:var(--tx3);">Total</span><span class="eco-val pos" id="eco-total-in">+0M</span></div>
       </div>
-    </section>
+      <div class="eco-section">
+        <div class="eco-sh">Dépenses</div>
+        <div id="eco-expense-lines"></div>
+        <div class="eco-total"><span style="font-size:8px;color:var(--tx3);">Total</span><span class="eco-val neg" id="eco-total-out">-0M</span></div>
+      </div>
+      <div class="eco-section">
+        <div class="eco-total"><span style="font-size:9px;color:var(--tx2);">Solde</span><span class="eco-val" id="eco-balance">0M</span></div>
+        <div class="eco-total"><span style="font-size:9px;color:var(--tx2);">Trésorerie</span><span class="eco-val" id="eco-treasury">0M</span></div>
+        <div class="eco-total"><span style="font-size:9px;color:var(--tx2);">Dette</span><span class="eco-val neg" id="eco-debt">0M</span></div>
+      </div>
+      <button class="maptb" style="width:100%;margin-top:.3rem;" onclick="openBudget()">DÉTAIL BUDGET</button>
+      <div style="border-top:1px solid var(--brd);margin-top:.4rem;padding-top:.4rem;">
+        <div class="rp-h">Projets en cours</div>
+        <div id="proj-mini"></div>
+        <button class="maptb" style="width:100%;margin-top:.3rem;" onclick="openProjects()">PROJETS [P]</button>
+      </div>
+    </div>
+    <!-- MIL -->
+    <div class="tab-pane" id="tp-mil">
+      <div class="mil-section"><div class="mil-sh">Effectifs</div><div id="mil-lines"></div></div>
+      <div class="mil-section"><div class="mil-sh">Capacités</div><div id="mil-power-lines"></div></div>
+      <div id="mil-situation" style="margin-top:.3rem;"></div>
+    </div>
+    <!-- CAB -->
+    <div class="tab-pane" id="tp-cab"><div id="cab-display"></div></div>
+    <!-- FAC -->
+    <div class="tab-pane" id="tp-fac"><div id="fac-display"></div></div>
   </div>
 
-  <script>
-    const toggleButton = document.getElementById('toggleSidebar');
-    const sidebar = document.getElementById('sidebar');
+  <!-- CENTER -->
+  <div class="game-center">
+    <div class="topbar">
+      <span class="tb-c" id="tb-c"></span>
+      <span class="tb-r" id="tb-r"></span>
+    </div>
 
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.textContent = sidebar.classList.contains('collapsed')
-        ? 'Déplier'
-        : 'Replier';
-    });
-  </script>
-</body>
-</html>
+    <!-- MAP TOOLBAR -->
+    <div class="map-tb">
+      <span class="map-label">CARTE</span>
+      <button class="maptb on" id="mlt-terrain" onclick="setMapLayer('terrain')">TERRAIN</button>
+      <button class="maptb" id="mlt-eco" onclick="setMapLayer('eco')">ÉCO</button>
+      <button class="maptb" id="mlt-mil" onclick="setMapLayer('mil')">MIL</button>
+      <button class="maptb" id="mlt-pop" onclick="setMapLayer('pop')">POP</button>
+    </div>
+
+    <!-- MAP SVG — inspiré Moyen-Orient inversé -->
+    <div id="mapzone" style="height:195px;">
+      <svg id="mapsvg" viewBox="0 0 760 195" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <!-- Fond marin -->
+        <rect class="water-deep" x="0" y="0" width="760" height="195"/>
+        <!-- Mer du Golfe centrale -->
+        <ellipse class="water" cx="410" cy="155" rx="120" ry="32"/>
+        <!-- Mer côtière Tiroy -->
+        <path class="water" d="M0,120 Q30,115 60,130 L60,195 L0,195 Z"/>
+        <!-- Mer Nwari (sud-est) -->
+        <path class="water-deep" d="M640,155 L760,155 L760,195 L640,195 Z"/>
+
+        <!-- KORDA (nord — ancien colonisateur, bande plate) -->
+        <rect class="reg reg-korda" id="reg-korda" x="0" y="0" width="760" height="38" data-country="korda"/>
+        <text x="380" y="24" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="rgba(180,170,200,.5)" letter-spacing="2">K O R D A</text>
+        <text x="380" y="34" text-anchor="middle" font-family="Georgia,serif" font-size="6" fill="rgba(180,170,200,.3)">ancienne puissance coloniale</text>
+
+        <!-- LASSANE (ouest sahélien) -->
+        <path class="reg reg-lassane" id="reg-lassane" d="M0,38 L55,38 L55,155 L35,165 L0,160 Z" data-country="lassane"/>
+        <text x="22" y="100" text-anchor="middle" font-family="Georgia,serif" font-size="7.5" fill="rgba(200,185,150,.45)" transform="rotate(-90,22,100)">LASSANE</text>
+
+        <!-- OUENZA (grande puissance est) -->
+        <path class="reg reg-ouenza" id="reg-ouenza" d="M630,38 L760,38 L760,150 L660,150 L640,135 L630,110 Z" data-country="ouenza"/>
+        <text x="695" y="90" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="rgba(180,200,180,.45)" letter-spacing="1">OUENZA</text>
+
+        <!-- NWARI (archipel 2 îles sud-est) -->
+        <ellipse class="reg reg-nwari" id="reg-nwari-a" cx="682" cy="172" rx="22" ry="14" data-country="nwari"/>
+        <ellipse class="reg reg-nwari" id="reg-nwari-b" cx="728" cy="178" rx="16" ry="10" data-country="nwari"/>
+        <text x="705" y="168" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="6" fill="rgba(160,200,230,.6)">NWARI</text>
+
+        <!-- TIROY (péninsule côtière centre-gauche) -->
+        <path class="reg hl-tiroy" id="hl-tiroy" d="M56,38 L260,38 L260,95 L240,115 L210,130 L185,150 L160,165 L120,178 L80,185 L55,180 L35,165 L55,155 L55,38 Z"/>
+        <!-- Régions Tiroy -->
+        <path class="reg" id="reg-t1" data-country="tiroy" data-eco="high" data-mil="medium" data-pop="high"
+          d="M56,38 L150,38 L150,95 L120,110 L90,115 L56,108 Z"/>
+        <path class="reg" id="reg-t2" data-country="tiroy" data-eco="medium" data-mil="low" data-pop="medium"
+          d="M150,38 L260,38 L260,95 L240,115 L210,130 L150,95 Z"/>
+        <path class="reg" id="reg-t3" data-country="tiroy" data-eco="medium" data-mil="low" data-pop="medium"
+          d="M56,108 L90,115 L120,110 L150,95 L210,130 L185,150 L140,155 L100,152 L70,145 L56,135 Z"/>
+        <path class="reg" id="reg-t4" data-country="tiroy" data-eco="high" data-mil="low" data-pop="low"
+          d="M70,145 L100,152 L140,155 L160,165 L120,178 L80,185 L55,180 L35,165 L55,155 Z"/>
+        <path class="reg" id="reg-t5" data-country="tiroy" data-eco="low" data-mil="fort" data-pop="low"
+          d="M56,38 L56,108 L90,115 L120,110 L56,38 Z"/>
+
+        <!-- MANDO (plateau intérieur central) -->
+        <path class="reg hl-mando" id="hl-mando" d="M200,38 L520,38 L520,130 L480,140 L440,145 L390,148 L340,145 L290,135 L255,118 L255,95 L260,38 Z"/>
+        <!-- Régions Mando -->
+        <path class="reg" id="reg-m1" data-country="mando" data-eco="low" data-mil="low" data-pop="low"
+          d="M260,38 L430,38 L430,75 L380,78 L320,75 L280,72 L260,65 Z"/>
+        <path class="reg" id="reg-m2" data-country="mando" data-eco="medium" data-mil="fort" data-pop="high"
+          d="M280,72 L320,75 L380,78 L430,75 L430,112 L400,122 L360,128 L320,125 L290,115 L280,100 Z"/>
+        <path class="reg" id="reg-m3" data-country="mando" data-eco="medium" data-mil="medium" data-pop="medium"
+          d="M430,38 L520,38 L520,130 L480,140 L440,145 L430,112 L430,38 Z"/>
+        <path class="reg" id="reg-m4" data-country="mando" data-eco="low" data-mil="medium" data-pop="low"
+          d="M260,65 L280,72 L280,100 L290,115 L255,118 L255,95 L260,65 Z"/>
+        <path class="reg" id="reg-m5" data-country="mando" data-eco="low" data-mil="low" data-pop="low"
+          d="M360,128 L400,122 L430,112 L440,145 L390,148 L340,145 L290,135 L290,115 L320,125 L360,128 Z"/>
+
+        <!-- BÉLO (péninsule est + bras côtier) -->
+        <path class="reg hl-belo" id="hl-belo" d="M520,38 L635,38 L640,55 L638,80 L630,110 L628,135 L610,155 L580,168 L555,172 L530,168 L510,155 L505,135 L510,115 L520,95 L520,38 Z"/>
+        <!-- Régions Bélo -->
+        <path class="reg" id="reg-b1" data-country="belo" data-eco="high" data-mil="medium" data-pop="high"
+          d="M520,38 L600,38 L605,60 L595,85 L575,100 L550,108 L525,105 L520,85 L520,38 Z"/>
+        <path class="reg" id="reg-b2" data-country="belo" data-eco="high" data-mil="fort" data-pop="medium"
+          d="M600,38 L635,38 L640,55 L638,80 L630,110 L628,135 L610,155 L590,162 L575,155 L565,135 L565,110 L575,100 L595,85 L605,60 Z"/>
+        <path class="reg" id="reg-b3" data-country="belo" data-eco="medium" data-mil="low" data-pop="medium"
+          d="M525,105 L550,108 L575,100 L565,110 L565,135 L575,155 L555,172 L530,168 L510,155 L505,135 L510,115 L520,95 Z"/>
+
+        <!-- Tension lines -->
+        <path class="tension-line" id="tz-border-tm" d="M255,40 L255,120"/>
+        <path class="tension-line" id="tz-border-mb" d="M520,45 L520,130"/>
+
+        <!-- War zones overlay -->
+        <path class="war-zone" id="wz-t5" d="M56,38 L56,108 L90,115 L120,110 L56,38 Z"/>
+        <path class="war-zone" id="wz-m3" d="M430,38 L520,38 L520,130 L480,140 L440,145 L430,112 L430,38 Z"/>
+        <path class="war-zone" id="wz-b2" d="M600,38 L635,38 L640,55 L638,80 L630,110 L628,135 L610,155 L590,162 L575,155 L565,135 L565,110 L575,100 L595,85 L605,60 Z"/>
+        <!-- Revolt zones -->
+        <path class="rev-zone" id="rev-zone-t" d="M56,38 L260,38 L260,95 L240,115 L210,130 L185,150 L160,165 L120,178 L80,185 L55,180 L35,165 L55,155 L55,38 Z"/>
+        <path class="rev-zone" id="rev-zone-m" d="M200,38 L520,38 L520,130 L480,140 L440,145 L390,148 L340,145 L290,135 L255,118 L255,95 L260,38 Z"/>
+        <path class="rev-zone" id="rev-zone-b" d="M520,38 L635,38 L640,55 L638,80 L630,110 L628,135 L610,155 L580,168 L555,172 L530,168 L510,155 L505,135 L510,115 L520,95 L520,38 Z"/>
+
+        <!-- City dots — Tiroy -->
+        <g class="city-dot" data-city="portsele">
+          <circle cx="88" cy="125" r="3.5" class="city-cap"/>
+          <text x="95" y="128" font-size="6" fill="rgba(200,168,75,.9)">Port-Sélène ★</text>
+        </g>
+        <g class="city-dot" data-city="toubakanda">
+          <circle cx="175" cy="70" r="2.5" class="city-sec"/>
+          <text x="181" y="73" font-size="5.5" fill="rgba(180,150,100,.7)">Touba-Kanda</text>
+        </g>
+        <g class="city-dot" data-city="koba">
+          <circle cx="105" cy="158" r="2" class="city-sec"/>
+          <text x="111" y="161" font-size="5.5" fill="rgba(180,150,100,.6)">Koba</text>
+        </g>
+        <g class="city-dot" data-city="sango">
+          <circle cx="68" cy="75" r="2" class="city-sec"/>
+          <text x="72" y="78" font-size="5.5" fill="rgba(180,150,100,.6)">Sango</text>
+        </g>
+
+        <!-- City dots — Mando -->
+        <g class="city-dot" data-city="mandara">
+          <circle cx="355" cy="95" r="3.5" class="city-cap"/>
+          <text x="361" y="98" font-size="6" fill="rgba(200,168,75,.9)">Mandara ★</text>
+        </g>
+        <g class="city-dot" data-city="ouella">
+          <circle cx="310" cy="55" r="2" class="city-sec"/>
+          <text x="316" y="58" font-size="5.5" fill="rgba(180,150,100,.65)">Ouella</text>
+        </g>
+        <g class="city-dot" data-city="fortkeni">
+          <circle cx="468" cy="85" r="2" class="city-sec"/>
+          <text x="474" y="88" font-size="5.5" fill="rgba(180,150,100,.65)">Fort-Kéni</text>
+        </g>
+        <g class="city-dot" data-city="walo">
+          <circle cx="390" cy="135" r="2" class="city-sec"/>
+          <text x="396" y="138" font-size="5.5" fill="rgba(180,150,100,.6)">Walo</text>
+        </g>
+
+        <!-- City dots — Bélo -->
+        <g class="city-dot" data-city="beloville">
+          <circle cx="548" cy="120" r="3.5" class="city-cap"/>
+          <text x="555" y="123" font-size="6" fill="rgba(200,168,75,.9)">Bélo-Ville ★</text>
+        </g>
+        <g class="city-dot" data-city="portfarouk">
+          <circle cx="612" cy="100" r="2.5" class="city-sec"/>
+          <text x="618" y="103" font-size="5.5" fill="rgba(180,150,100,.65)">Port-Farouk</text>
+        </g>
+        <g class="city-dot" data-city="alsana">
+          <circle cx="560" cy="155" r="2" class="city-sec"/>
+          <text x="564" y="158" font-size="5.5" fill="rgba(180,150,100,.6)">Al-Sana</text>
+        </g>
+
+        <!-- Country labels -->
+        <text x="150" y="88" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="rgba(200,228,170,.45)" font-style="italic">TIROY</text>
+        <text x="360" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="rgba(228,210,170,.45)" font-style="italic">MANDO</text>
+        <text x="575" y="72" text-anchor="middle" font-family="Georgia,serif" font-size="9" fill="rgba(170,200,228,.45)" font-style="italic">BÉLO</text>
+
+        <!-- Golfe label -->
+        <text x="420" y="160" text-anchor="middle" font-family="Georgia,serif" font-size="7" fill="rgba(100,160,200,.4)" font-style="italic">Golfe de Sanga</text>
+
+        <!-- Events / projects layers -->
+        <g id="map-events"></g>
+        <g id="proj-markers"></g>
+
+        <!-- Tooltips -->
+        <foreignObject x="0" y="0" width="760" height="195" style="pointer-events:none;">
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            <div id="reg-tooltip"></div>
+            <div id="city-tooltip"></div>
+          </div>
+        </foreignObject>
+      </svg>
+    </div><!-- /mapzone -->
+
+    <!-- NARRATIVE ZONE -->
+    <div class="narr-zone" id="narr-zone">
+      <div class="sit-tag-row">
+        <span class="sit-tag" id="sit-tag">PROLOGUE</span>
+        <span class="sit-year" id="sit-year">1971</span>
+      </div>
+      <div class="sit-title" id="sit-title">Vous prenez le pouvoir</div>
+
+      <!-- War panel (intégré dans le récit, pas de modal) -->
+      <div id="war-panel">
+        <div class="war-panel-title">⚔ ÉTAT DE GUERRE</div>
+        <div class="war-power-bars" id="war-panel-grid"></div>
+        <div class="war-cas" id="war-panel-cas"></div>
+      </div>
+
+      <!-- Revolt panel -->
+      <div id="rev-panel">
+        <div class="rev-panel-title">🔥 SOULÈVEMENT</div>
+        <div class="rev-zones" id="rev-panel-zones"></div>
+      </div>
+
+      <div class="sit-text" id="sit-text"></div>
+      <div class="info-box" id="conseq-box" style="display:none;"><span id="conseq-text"></span></div>
+      <div class="info-box" id="thread-box" style="display:none;"><span id="thread-text"></span></div>
+      <div class="loy-alert" id="loy-alert"></div>
+      <div id="advbox">
+        <div class="adv-who" id="advwho"></div>
+        <div class="adv-q" id="advq"></div>
+        <div class="adv-warn" id="adv-warn"></div>
+      </div>
+    </div>
+
+    <!-- CHOICES -->
+    <div id="clist"></div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="game-right">
+    <div class="rp-section">
+      <div class="rp-h">JOURNAL</div>
+      <div id="hlist"></div>
+    </div>
+  </div>
+
+</div><!-- /s-game -->
+
+<!-- GAME OVER -->
+<div id="s-gameover" class="screen off">
+  <div class="go-inner">
+    <div class="go-sub" id="go-sub"></div>
+    <div class="go-h2" id="go-h2"></div>
+    <div class="go-text" id="go-text"></div>
+    <div class="go-stats" id="go-eco"></div>
+    <div class="go-projs" id="go-projs"></div>
+    <button class="nbtn" onclick="location.reload()">RECOMMENCER</button>
+  </div>
+</div>
+
+<!-- BUDGET MODAL -->
+<div id="budget-modal" class="modal off">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-head">
+      <span class="modal-title">BUDGET — <span id="bm-year"></span></span>
+      <button class="modal-close" onclick="closeModal('budget-modal')">✕</button>
+    </div>
+    <div class="modal-body"><div id="budget-detail"></div></div>
+  </div>
+</div>
+
+<!-- PROJECTS MODAL -->
+<div id="proj-modal" class="modal off">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title">PROJETS D'ÉTAT — Trésorerie : <span id="pm-treasury"></span>M</span>
+      <button class="modal-close" onclick="closeModal('proj-modal')">✕</button>
+    </div>
+    <div class="modal-body"><div id="proj-list"></div></div>
+  </div>
+</div>
+
+<!-- YEAR TRANSITION -->
+<div id="ytrans">
+  <div class="yt-inner">
+    <div class="yt-yr-row">
+      <span class="yt-prev" id="yt-prev-yr"></span>
+      <span style="color:var(--tx4);margin:0 .3rem;">→</span>
+      <span class="yt-yr-num" id="yt-yr"></span>
+    </div>
+    <div class="yt-sub-txt" id="yt-sub"></div>
+    <div class="yt-sec-h" id="yt-eco-hdr" style="display:none;">BILAN ÉCONOMIQUE</div>
+    <div id="yt-eco-vals"></div>
+    <div class="yt-sec-h">ÉVÉNEMENTS</div>
+    <div id="yt-events"></div>
+    <div class="yt-sec-h" id="yt-proj-hdr" style="display:none;">PROJETS EN COURS</div>
+    <div id="yt-proj-items"></div>
+    <div style="margin-top:1.2rem;">
+      <button class="nbtn" onclick="continueGame()">CONTINUER →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ═══════════════════════════════════════
+//  DATA — CABINET v5
+// ═══════════════════════════════════════
+
+const BASE=1971, MAX_TURNS=15;
+
+// Global state
+const G={
+  country:null, ideo:null, ruler:null, year:BASE, turn:1,
+  stats:[50,50,50,50,50],
+  factions:[],
+  cabinet:{},
+  flags:{},
+  threads:{},
+  history:[],
+  activeAdv:null,
+  yearLog:[],
+  projects:{},
+  selectedSlot:null,
+  mapLayer:'terrain',
+  mapExpanded:false,
+  neighbors:{korda:50, lassane:50, ouenza:50, nwari:50},
+  eco:{
+    treasury:200, debt:0, tax_base:0, resource_mining:0,
+    resource_oil:0, resource_agri:0, trade:0, aid_foreign:0,
+    army_upkeep:0, admin:0, social:0, infrastructure_income:0,
+    proj_upkeep:0, shocks:[]
+  },
+  mil:{troops:5000, tanks:8, planes:4, ships:0, morale:65, training:55, modernization:40},
+  war:{active:false, attacker:null, defender:null, phase:'none', round:0,
+    casualties:{att:0,def:0}, war_crimes:0, weather:'saison_seche',
+    terrain:'plaine', started_turn:0, outcome:null},
+  revolt:{active:false, region:null, intensity:0, turn_started:0},
+  war_chain:{active:false, id:null, queue:[], battle_result:null}
+};
+
+// ─── IDÉOLOGIES ───────────────────────
+const IDEOS={
+  social:    {name:'Socialisme africain', color:'#c05840', desc:'Le peuple avant tout. Nationalisation, redistribution, santé publique.', bonus:'Peuple +5 au départ', mod:[5,0,-3,2,0]},
+  liberal:   {name:'Libéralisme écon.',   color:'#4888d0', desc:'Marché libre, capitaux étrangers, secteur privé moteur.', bonus:'Finances +5, Trésorerie +30M', mod:[0,0,5,0,0]},
+  national:  {name:'Nationalisme civique',color:'#40a060', desc:'Souveraineté absolue, indépendance des blocs, armée nationale forte.', bonus:'Armée +5 au départ', mod:[0,5,-2,2,0]},
+  techno:    {name:'Technocratie',        color:'#a080c8', desc:'Experts, planification, efficacité institutionnelle.', bonus:'Stabilité +5', mod:[0,0,3,-2,5]},
+  islamiste: {name:'Islam politique',     color:'#c89040', desc:'Loi divine, solidarité communautaire, réformes morales.', bonus:'Légitimité +6 (Bélo)', mod:[3,0,-3,6,-2]},
+  panafrica: {name:'Panafricanisme',      color:'#3090a8', desc:'Unité continentale, anticolonialisme, coopération régionale.', bonus:'Relations Ouenza +15', mod:[2,0,-1,4,1]},
+};
+
+// ─── ROLE LABELS ──────────────────────
+const ROLE_LABELS={
+  min_interieur:   'Min. Intérieur',
+  min_finances:    'Min. Finances',
+  min_defense:     'Min. Défense',
+  min_affaires:    'Aff. Étrangères',
+  chef_securite:   'Chef Sécurité',
+  min_education:   'Min. Éducation',
+  min_economie:    'Min. Économie',
+  chef_etat_major: 'Chef É.-Major',
+  grand_mufti:     'Grand Mufti',
+  min_petrole:     'Min. Pétrole',
+};
+
+// ─── PAYS ─────────────────────────────
+const COUNTRIES={
+
+tiroy:{
+  name:'République de Tiroy',
+  capital:'Port-Sélène',
+  ruler:'Président Sékou-Thomas Bamba-Ndiaye',
+  ruler_title:'Président',
+  desc:'Jeune démocratie côtière. Cuivre, pétrole offshore naissant, tensions syndicales.',
+  defi:'Gérer la nationalisation des mines face aux intérêts étrangers.',
+  ideos:['social','liberal','national','panafrica'],
+  roles:['min_interieur','min_finances','min_defense','min_affaires','chef_securite','min_education'],
+  candidates:['keita_t','ndiaye_t','bamba_t','fall_t','toure_t','camara_t','barry_t','diallo_t'],
+  factions:[
+    {id:'syndicats', name:'Syndicats miniers', val:62, trend:0},
+    {id:'armee_t',   name:'Officiers corps', val:55, trend:0},
+    {id:'affaires',  name:'Milieux affaires', val:48, trend:0},
+    {id:'etudiants', name:'Mouvement étudiant', val:70, trend:0},
+    {id:'nordistes', name:'Clans du Nord', val:42, trend:0},
+  ],
+  start_stats:[52,45,42,55,50],
+  start_eco:{treasury:180, debt:40, tax_base:35, resource_mining:18, resource_oil:0,
+    resource_agri:8, trade:12, aid_foreign:10, army_upkeep:22, admin:18, social:14, proj_upkeep:0},
+  start_mil:{troops:7000, tanks:12, planes:5, ships:2, morale:62, training:52, modernization:38},
+  start_neighbors:{korda:55, lassane:60, ouenza:45, nwari:50},
+},
+
+mando:{
+  name:'République du Mando',
+  capital:'Mandara',
+  ruler:'Général-Président Amadou Diarra-Kouyaté',
+  ruler_title:'Général-Président',
+  desc:'Junte militaire sahélienne. Uranium secret, uranium, base soviétique convoitée.',
+  defi:'Stabiliser le pays tout en résistant aux pressions des superpuissances.',
+  ideos:['national','social','techno','panafrica'],
+  roles:['chef_etat_major','min_interieur','min_finances','min_affaires','min_education','min_economie'],
+  candidates:['dembele_m','niame_m','diarra_m','traore_m','maiga_m','kouyate_m','sylla_m','coulibaly_m'],
+  factions:[
+    {id:'officiers', name:'Corps des officiers', val:72, trend:0},
+    {id:'oulémas',   name:'Confréries religieuses', val:55, trend:0},
+    {id:'paysans',   name:'Bloc paysan', val:40, trend:0},
+    {id:'tribu_nord',name:'Tribus du Nord', val:48, trend:0},
+    {id:'tech_m',    name:'Technocrates civils', val:38, trend:0},
+  ],
+  start_stats:[40,70,38,48,52],
+  start_eco:{treasury:120, debt:80, tax_base:22, resource_mining:8, resource_oil:0,
+    resource_agri:12, trade:8, aid_foreign:22, army_upkeep:38, admin:14, social:8, proj_upkeep:0},
+  start_mil:{troops:15000, tanks:28, planes:12, ships:0, morale:75, training:65, modernization:42},
+  start_neighbors:{korda:40, lassane:65, ouenza:35, nwari:30},
+},
+
+belo:{
+  name:'Sultanat de Bélo',
+  capital:'Bélo-Ville',
+  ruler:'Sultan Al-Farouk Mansour ben Rashid',
+  ruler_title:'Sultan',
+  desc:'Sultanat pétrolier côtier. Richesses immenses, modernisation fragile, voisin Nwari hostile.',
+  defi:'Moderniser sans déstabiliser — et sécuriser les eaux du Golfe de Sanga.',
+  ideos:['islamiste','liberal','national','techno'],
+  roles:['grand_mufti','min_finances','min_defense','min_affaires','min_petrole','chef_securite'],
+  candidates:['farouk_b','nasser_b','khalil_b','aziz_b','rashed_b','mansour_b','altaher_b','alrashid_b'],
+  factions:[
+    {id:'oulémas_b', name:'Conseil des oulémas', val:68, trend:0},
+    {id:'marine',    name:'Marine royale', val:60, trend:0},
+    {id:'clans_b',   name:'Grandes familles', val:72, trend:0},
+    {id:'modernistes',name:'Modernistes laïcs', val:38, trend:0},
+    {id:'marchands', name:'Marchands du Golfe', val:55, trend:0},
+  ],
+  start_stats:[48,52,72,60,55],
+  start_eco:{treasury:380, debt:20, tax_base:30, resource_mining:0, resource_oil:55,
+    resource_agri:4, trade:20, aid_foreign:0, army_upkeep:28, admin:16, social:12, proj_upkeep:0},
+  start_mil:{troops:5000, tanks:8, planes:4, ships:12, morale:60, training:50, modernization:45},
+  start_neighbors:{korda:60, lassane:45, ouenza:65, nwari:25},
+},
+
+}; // end COUNTRIES
+
+// ─── CANDIDATS — 8 UNIQUES PAR PAYS (24 total) ────────────────────
+const CANDS={
+
+// ── TIROY (8) ──
+keita_t:{
+  name:'Mamadou Keïta', emoji:'🎭', ideo:'social', loy:68,
+  roles:['min_interieur','min_education'],
+  desc:'Ancien syndicaliste reconverti en politique. Réseau populaire dense.',
+  hidden:'Ambitionne la présidence. Votre chute serait sa victoire.',
+  agenda:'peuple'
+},
+ndiaye_t:{
+  name:'Issouf Ndiaye', emoji:'📊', ideo:'liberal', loy:72,
+  roles:['min_finances','min_economie'],
+  desc:'Diplômé de l\'ENA Paris. Maîtrise FMI et marchés des capitaux.',
+  hidden:'Reçoit des honoraires d\'un cabinet parisien. Conflits d\'intérêts potentiels.',
+  agenda:'finances'
+},
+bamba_t:{
+  name:'Col. Bamba Sow', emoji:'🪖', ideo:'national', loy:60,
+  roles:['min_defense','chef_securite'],
+  desc:'Héros de la guerre civile de 1963. Populaire dans les casernes.',
+  hidden:'Contacts réguliers avec les généraux de Mando. Loyauté ambiguë.',
+  agenda:'armee'
+},
+fall_t:{
+  name:'Aïssatou Fall', emoji:'📚', ideo:'social', loy:75,
+  roles:['min_education','min_affaires'],
+  desc:'Professeure d\'université. Première femme ministre potentielle.',
